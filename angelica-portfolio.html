@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Angelica Del Priore — Multidisciplinary Global Creative Leader</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --white: #fafaf8;
+    --offwhite: #f4f4f0;
+    --sage: #d4ddc8;
+    --sage-light: #e8eddf;
+    --sage-mid: #a8b89a;
+    --green: #5a6e4a;
+    --green-dark: #3a4a2e;
+    --charcoal: #1a1a1a;
+    --grey: #6b6b6b;
+    --grey-light: #9a9a9a;
+    --border: rgba(90,110,74,0.12);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--white);
+    color: var(--charcoal);
+    font-family: 'Avenir Next', 'Avenir', 'Century Gothic', 'Trebuchet MS', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ═══════ LOCK SCREEN ═══════ */
+  #lock {
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--charcoal);
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity .7s ease, visibility .7s ease;
+  }
+  #lock.out { opacity: 0; visibility: hidden; pointer-events: none; }
+
+  .lock-inner { text-align: center; position: relative; width: 90%; max-width: 380px; }
+  .lock-mark {
+    font-size: clamp(3rem, 10vw, 5.5rem);
+    font-weight: 200; letter-spacing: .15em;
+    color: var(--sage); line-height: 1; margin-bottom: .25rem;
+    animation: lu 1s ease both;
+  }
+  .lock-sub {
+    font-size: .55rem; letter-spacing: .4em; text-transform: uppercase;
+    color: var(--sage-mid); opacity: .7; margin-bottom: 3rem;
+    animation: lu 1s .1s ease both;
+  }
+  .lock-line { width: 32px; height: 1px; background: var(--sage-mid); margin: 0 auto 2.5rem; animation: lu 1s .2s ease both; }
+  .lock-hint { font-size: .55rem; letter-spacing: .3em; text-transform: uppercase; color: var(--grey-light); margin-bottom: .8rem; animation: lu 1s .25s ease both; }
+  #pw {
+    width: 100%; background: transparent; border: none;
+    border-bottom: 1px solid rgba(168,184,154,.3);
+    color: var(--sage-light); font-family: inherit;
+    font-size: .85rem; font-weight: 300; letter-spacing: .2em;
+    text-align: center; padding: .6rem 0; outline: none;
+    transition: border-color .3s; animation: lu 1s .3s ease both;
+  }
+  #pw::placeholder { color: rgba(168,184,154,.2); }
+  #pw:focus { border-color: var(--sage); }
+  #lock-err { font-size: .55rem; letter-spacing: .2em; text-transform: uppercase; color: #b07070; margin-top: .6rem; min-height: 1rem; }
+  .lock-btn {
+    margin-top: 1.8rem; display: inline-block; padding: .7rem 2.2rem;
+    border: 1px solid rgba(168,184,154,.35); background: transparent;
+    color: var(--sage); font-family: inherit; font-size: .55rem;
+    letter-spacing: .35em; text-transform: uppercase; cursor: pointer;
+    transition: all .3s; animation: lu 1s .4s ease both;
+  }
+  .lock-btn:hover { background: var(--sage); color: var(--charcoal); border-color: var(--sage); }
+
+  @keyframes lu { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+
+  /* ═══════ SITE ═══════ */
+  #site { opacity: 0; transition: opacity .8s .2s ease; }
+  #site.on { opacity: 1; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 5vw;
+    background: rgba(250,250,248,.88); backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border); transition: box-shadow .3s;
+  }
+  nav.scrolled { box-shadow: 0 1px 20px rgba(0,0,0,.04); }
+  .nav-logo { font-size: .6rem; letter-spacing: .35em; text-transform: uppercase; color: var(--charcoal); text-decoration: none; font-weight: 500; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { font-size: .55rem; letter-spacing: .25em; text-transform: uppercase; color: var(--charcoal); opacity: .5; text-decoration: none; transition: opacity .2s; }
+  .nav-links a:hover { opacity: 1; }
+  .nav-burger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+  .nav-burger span { display: block; width: 18px; height: 1.5px; background: var(--charcoal); margin: 4px 0; transition: .3s; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 6vw 10vh; position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 75% 25%, rgba(212,221,200,.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 20% 75%, rgba(168,184,154,.12) 0%, transparent 45%),
+                var(--white);
+  }
+  .hero-accent {
+    position: absolute; top: 14vh; right: 8vw;
+    width: clamp(160px, 22vw, 380px); aspect-ratio: 1;
+    border-radius: 50%; border: 1px solid var(--border);
+    pointer-events: none; animation: lu 1.2s .3s ease both;
+  }
+  .hero-accent::before { content:''; position:absolute; inset:20%; border-radius:50%; border:1px solid rgba(168,184,154,.1); }
+  .hero-accent::after { content:''; position:absolute; inset:40%; border-radius:50%; background:rgba(212,221,200,.08); }
+  .hero-content { position: relative; max-width: 780px; }
+  .hero-eyebrow { font-size:.55rem; letter-spacing:.45em; text-transform:uppercase; color:var(--green); margin-bottom:1.2rem; animation: lu 1s .1s ease both; }
+  .hero h1 { font-size:clamp(3rem,7.5vw,6.5rem); font-weight:200; line-height:.95; letter-spacing:-.02em; color:var(--charcoal); margin-bottom:.8rem; animation: lu 1s .2s ease both; }
+  .hero h1 em { font-style:italic; font-weight:300; color:var(--green); }
+  .hero-title { font-size:.6rem; letter-spacing:.3em; text-transform:uppercase; color:var(--grey); margin-bottom:2rem; animation: lu 1s .35s ease both; }
+  .hero-bio { max-width:520px; font-size:.92rem; line-height:1.85; color:var(--grey); margin-bottom:2.5rem; animation: lu 1s .45s ease both; }
+  .hero-ctas { display:flex; gap:1rem; flex-wrap:wrap; animation: lu 1s .55s ease both; }
+
+  .btn { display:inline-block; padding:.8rem 2.2rem; font-family:inherit; font-size:.55rem; letter-spacing:.3em; text-transform:uppercase; text-decoration:none; transition:all .3s; cursor:pointer; border:none; }
+  .btn-fill { background:var(--charcoal); color:var(--white); }
+  .btn-fill:hover { background:var(--green); }
+  .btn-ghost { background:transparent; border:1px solid rgba(26,26,26,.2); color:var(--charcoal); }
+  .btn-ghost:hover { background:var(--charcoal); color:var(--white); border-color:var(--charcoal); }
+
+  /* SECTIONS */
+  section { padding: 7rem 6vw; }
+  .sec-label { font-size:.52rem; letter-spacing:.45em; text-transform:uppercase; color:var(--green); margin-bottom:.75rem; }
+  .sec-heading { font-size:clamp(1.8rem,4vw,3.2rem); font-weight:200; line-height:1.1; color:var(--charcoal); margin-bottom:.5rem; max-width:620px; }
+  .sec-heading em { font-style:italic; color:var(--green); }
+  .sec-line { width:32px; height:1px; background:var(--sage-mid); margin:1.5rem 0 2.5rem; }
+
+  /* BRANDS */
+  .brands-section { background:var(--offwhite); padding:5rem 6vw; }
+  .brands-grid { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:2.5rem 4rem; margin-top:2rem; }
+  .brand-name { font-size:clamp(.7rem,1.4vw,.95rem); font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--charcoal); opacity:.35; transition:opacity .3s; white-space:nowrap; }
+  .brand-name:hover { opacity:.75; }
+
+  /* ABOUT */
+  .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:start; }
+  .about-text { font-size:.88rem; line-height:1.9; color:var(--grey); max-width:520px; }
+  .about-text p+p { margin-top:1.2rem; }
+  .about-stats { display:grid; grid-template-columns:1fr 1fr; gap:2rem; margin-top:2rem; }
+  .stat-num { font-size:2.5rem; font-weight:200; color:var(--green); line-height:1; }
+  .stat-label { font-size:.55rem; letter-spacing:.25em; text-transform:uppercase; color:var(--grey-light); margin-top:.3rem; }
+  .expertise-list { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1rem; }
+  .expertise-pill { font-size:.55rem; letter-spacing:.15em; text-transform:uppercase; padding:.4rem .9rem; border:1px solid var(--border); color:var(--green-dark); transition:all .3s; }
+  .expertise-pill:hover { background:var(--sage-light); border-color:var(--sage-mid); }
+
+  /* CASES */
+  .cases-section { background:var(--charcoal); color:var(--white); }
+  .cases-section .sec-label { color:var(--sage); }
+  .cases-section .sec-heading { color:var(--white); }
+  .cases-section .sec-line { background:var(--sage-mid); }
+  .case-card { border-top:1px solid rgba(168,184,154,.15); padding:2.5rem 0; cursor:pointer; }
+  .case-card:last-of-type { border-bottom:1px solid rgba(168,184,154,.15); }
+  .case-header { display:grid; grid-template-columns:1fr auto; align-items:center; gap:2rem; }
+  .case-brand { font-size:clamp(1.4rem,3vw,2.2rem); font-weight:300; color:var(--sage); line-height:1.15; }
+  .case-subtitle { font-size:.55rem; letter-spacing:.25em; text-transform:uppercase; color:var(--grey-light); margin-top:.25rem; }
+  .case-toggle { width:36px; height:36px; border-radius:50%; border:1px solid rgba(168,184,154,.25); display:flex; align-items:center; justify-content:center; color:var(--sage); font-size:1.1rem; font-weight:200; transition:all .3s; flex-shrink:0; }
+  .case-card.open .case-toggle { transform:rotate(45deg); background:var(--sage); color:var(--charcoal); }
+  .case-body { max-height:0; overflow:hidden; transition:max-height .5s ease, padding .3s ease; padding:0; }
+  .case-card.open .case-body { max-height:800px; padding:2rem 0 1rem; }
+  .case-content { display:grid; grid-template-columns:1fr 1fr; gap:3rem; }
+  .case-block h4 { font-size:.55rem; letter-spacing:.3em; text-transform:uppercase; color:var(--sage-mid); margin-bottom:.6rem; font-weight:500; }
+  .case-block p { font-size:.82rem; line-height:1.8; color:rgba(255,255,255,.55); }
+  .case-scope { margin-top:1.5rem; }
+  .scope-h { font-size:.55rem; letter-spacing:.3em; text-transform:uppercase; color:var(--sage-mid); margin-bottom:.5rem; font-weight:500; }
+  .scope-tags { display:flex; flex-wrap:wrap; gap:.35rem; }
+  .scope-tag { font-size:.48rem; letter-spacing:.15em; text-transform:uppercase; padding:.25rem .6rem; border:1px solid rgba(168,184,154,.2); color:var(--sage-mid); }
+
+  /* APPROACH */
+  .approach-section { background:var(--sage-light); }
+  .approach-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0; margin-top:2rem; }
+  .approach-step { padding:2.5rem; border:1px solid var(--border); margin-left:-1px; margin-top:-1px; transition:background .3s; }
+  .approach-step:hover { background:rgba(255,255,255,.5); }
+  .step-num { font-size:2.5rem; font-weight:200; color:var(--sage-mid); line-height:1; margin-bottom:1rem; }
+  .step-title { font-size:1.1rem; font-weight:500; color:var(--green-dark); margin-bottom:.6rem; }
+  .step-desc { font-size:.8rem; line-height:1.75; color:var(--grey); }
+  .approach-motto { margin-top:3rem; text-align:center; font-size:.6rem; letter-spacing:.35em; text-transform:uppercase; color:var(--green); }
+
+  /* ADVISORY */
+  .advisory-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.5rem; margin-top:2rem; }
+  .advisory-card { padding:2rem; border:1px solid var(--border); transition:border-color .3s, transform .3s; }
+  .advisory-card:hover { border-color:var(--sage-mid); transform:translateY(-2px); }
+  .advisory-role { font-size:.5rem; letter-spacing:.3em; text-transform:uppercase; color:var(--green); margin-bottom:.4rem; }
+  .advisory-name { font-size:1.1rem; font-weight:400; color:var(--charcoal); margin-bottom:.5rem; }
+  .advisory-desc { font-size:.78rem; line-height:1.7; color:var(--grey); }
+
+  /* CONTACT */
+  .contact-section { background:var(--charcoal); color:var(--white); text-align:center; padding:8rem 6vw; }
+  .contact-section .sec-label { color:var(--sage); }
+  .contact-section .sec-heading { color:var(--white); margin:0 auto .5rem; }
+  .contact-section .sec-line { margin:1.5rem auto 2.5rem; background:var(--sage-mid); }
+  .contact-email { font-size:clamp(1rem,2.5vw,1.6rem); font-weight:300; font-style:italic; color:var(--sage); text-decoration:none; display:block; margin-bottom:.75rem; transition:color .3s; }
+  .contact-email:hover { color:var(--white); }
+  .contact-phone { font-size:.8rem; color:var(--grey-light); letter-spacing:.1em; margin-bottom:2.5rem; }
+  .contact-url { font-size:.55rem; letter-spacing:.35em; text-transform:uppercase; color:var(--grey-light); opacity:.4; margin-top:3rem; display:block; }
+
+  footer { background:var(--charcoal); border-top:1px solid rgba(168,184,154,.1); padding:1.5rem 6vw; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.8rem; }
+  .foot-left { font-size:.55rem; letter-spacing:.2em; color:var(--sage-mid); opacity:.5; }
+  .foot-right { font-size:.52rem; letter-spacing:.15em; color:var(--grey-light); opacity:.3; }
+
+  .rv { opacity:0; transform:translateY(20px); transition:opacity .7s ease, transform .7s ease; }
+  .rv.in { opacity:1; transform:translateY(0); }
+
+  @media (max-width:768px) {
+    nav { padding:1rem 5vw; }
+    .nav-links { display:none; position:fixed; top:52px; left:0; right:0; background:rgba(250,250,248,.96); flex-direction:column; padding:1.5rem 5vw; gap:1.2rem; border-bottom:1px solid var(--border); }
+    .nav-links.mob-open { display:flex; }
+    .nav-burger { display:block; }
+    section { padding:5rem 5vw; }
+    .hero { padding:0 5vw 8vh; }
+    .about-grid { grid-template-columns:1fr; gap:2.5rem; }
+    .case-content { grid-template-columns:1fr; gap:1.5rem; }
+    .approach-grid { grid-template-columns:1fr; }
+    .approach-step { margin-left:0; }
+    .brands-grid { gap:1.5rem 2.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOCK -->
+<div id="lock">
+  <div class="lock-inner">
+    <div class="lock-mark">ADP</div>
+    <div class="lock-sub">AngelicaDelPriore.com</div>
+    <div class="lock-line"></div>
+    <div class="lock-hint">Enter access code</div>
+    <input type="password" id="pw" placeholder="••••••••" autocomplete="off" />
+    <div id="lock-err"></div>
+    <button class="lock-btn" onclick="unlock()">Enter</button>
+  </div>
+</div>
+
+<!-- SITE -->
+<div id="site">
+
+<nav id="nav">
+  <a class="nav-logo" href="#">Angelica Del Priore</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about" onclick="closeNav()">About</a></li>
+    <li><a href="#work" onclick="closeNav()">Work</a></li>
+    <li><a href="#approach" onclick="closeNav()">Approach</a></li>
+    <li><a href="#contact" onclick="closeNav()">Contact</a></li>
+  </ul>
+  <button class="nav-burger" onclick="document.getElementById('navLinks').classList.toggle('mob-open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-accent"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Multidisciplinary Global Creative Leader</p>
+    <h1>Angelica<br><em>Del Priore</em></h1>
+    <p class="hero-title">Creative Marketing Executive &bull; Global Brand Builder &bull; Clean Beauty & Sustainability</p>
+    <p class="hero-bio">Over 20 years shaping luxury and prestige beauty brands — from legacy reinvention to global launch. Building brand systems designed to stick, structured to scale, and built to endure.</p>
+    <div class="hero-ctas">
+      <a href="https://drive.google.com/file/d/1q0rN2L6QfK2_0wtrW7rNaJye15DxMRRq/view?usp=share_link" target="_blank" class="btn btn-fill">View Full Portfolio</a>
+      <a href="#work" class="btn btn-ghost">Selected Work</a>
+    </div>
+  </div>
+</section>
+
+<div class="brands-section">
+  <div class="brands-grid rv">
+    <span class="brand-name">bareMinerals</span>
+    <span class="brand-name">Tom Ford Beauty</span>
+    <span class="brand-name">Viktor & Rolf</span>
+    <span class="brand-name">Rodan + Fields</span>
+    <span class="brand-name">ZO Skin Health</span>
+    <span class="brand-name">Giorgio Armani</span>
+    <span class="brand-name">Ralph Lauren</span>
+    <span class="brand-name">Maison Margiela</span>
+    <span class="brand-name">Bakeup Beauty</span>
+  </div>
+</div>
+
+<section id="about">
+  <div class="about-grid">
+    <div>
+      <p class="sec-label rv">About</p>
+      <h2 class="sec-heading rv">Two decades building brands that <em>define categories.</em></h2>
+      <div class="sec-line rv"></div>
+      <div class="about-text rv">
+        <p>Angelica Del Priore brings over 20 years of experience in the luxury and prestige beauty industry, spanning diverse categories and disciplines. She has worked in-house with iconic brands such as Viktor & Rolf, Giorgio Armani, Ralph Lauren, Maison Martin Margiela, bareMinerals, Rodan + Fields, and Tom Ford.</p>
+        <p>Throughout her career, Angelica has built and led multi-disciplinary creative teams, both in-house and at Grade A Design, a leading NYC-based creative agency. She has a proven track record of helping brands grow and scale while maintaining cohesive and engaging brand narratives across all touchpoints.</p>
+        <p>Angelica is also a recognized leader in sustainability and clean beauty, with over five years of experience developing innovative solutions. At bareMinerals, she spearheaded the first-ever global sustainability roadmap for packaging, visual merchandising, and store design.</p>
+      </div>
+    </div>
+    <div>
+      <div class="about-stats rv">
+        <div><div class="stat-num">20+</div><div class="stat-label">Years in Beauty</div></div>
+        <div><div class="stat-num">9+</div><div class="stat-label">Global Brands Led</div></div>
+        <div><div class="stat-num">360°</div><div class="stat-label">Multidisciplinary Scope</div></div>
+        <div><div class="stat-num">$1.5B</div><div class="stat-label">Brand Revenue Scaled</div></div>
+      </div>
+      <div style="margin-top:3rem" class="rv">
+        <p class="sec-label">Core Expertise</p>
+        <div class="expertise-list">
+          <span class="expertise-pill">Creative Leadership</span>
+          <span class="expertise-pill">Brand Strategy</span>
+          <span class="expertise-pill">3D Package Design</span>
+          <span class="expertise-pill">Packaging Production</span>
+          <span class="expertise-pill">Visual Merchandising</span>
+          <span class="expertise-pill">Experiential Design</span>
+          <span class="expertise-pill">Campaign & Content</span>
+          <span class="expertise-pill">Still & Video Production</span>
+          <span class="expertise-pill">Copywriting & Editorial</span>
+          <span class="expertise-pill">Creative Operations</span>
+          <span class="expertise-pill">Sustainability</span>
+          <span class="expertise-pill">Clean Beauty</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cases-section" id="work">
+  <p class="sec-label rv">Selected Work</p>
+  <h2 class="sec-heading rv">Brands transformed. <em>Categories redefined.</em></h2>
+  <div class="sec-line rv"></div>
+
+  <div class="case-card rv" onclick="this.classList.toggle('open')">
+    <div class="case-header">
+      <div><div class="case-brand">bareMinerals</div><div class="case-subtitle">Reinventing a Legacy Through Clean Beauty Leadership</div></div>
+      <div class="case-toggle">+</div>
+    </div>
+    <div class="case-body">
+      <div class="case-content">
+        <div class="case-block"><h4>The Challenge</h4><p>bareMinerals pioneered Clean Beauty before the category had a name. But legacy can become limitation when the world catches up. The brand needed reinvention without abandoning the integrity that built its foundation — elevating its original positioning for a new generation while staying true to its roots.</p></div>
+        <div class="case-block"><h4>The Impact</h4><p>We led a full-scale transformation — strategy, packaging, experiential design, and creative direction — codified through global guidelines. We signed Hailey Bieber as the brand's first-ever celebrity face and created the brand's first sustainability roadmap integrating packaging, retail merchandising, and philanthropy. bareMinerals reclaimed its position as the Clean Beauty authority.</p></div>
+      </div>
+      <div class="case-scope"><div class="scope-h">Scope of Work</div><div class="scope-tags"><span class="scope-tag">Brand Strategy</span><span class="scope-tag">Creative Direction</span><span class="scope-tag">Art Direction</span><span class="scope-tag">Packaging Design</span><span class="scope-tag">Packaging Production</span><span class="scope-tag">Visual Merchandising</span><span class="scope-tag">Global Brand Guidelines</span><span class="scope-tag">Sustainability Roadmap</span></div></div>
+    </div>
+  </div>
+
+  <div class="case-card rv" onclick="this.classList.toggle('open')">
+    <div class="case-header">
+      <div><div class="case-brand">Tom Ford Beauty</div><div class="case-subtitle">Luxury at Scale</div></div>
+      <div class="case-toggle">+</div>
+    </div>
+    <div class="case-body">
+      <div class="case-content">
+        <div class="case-block"><h4>The Challenge</h4><p>Tom Ford Beauty was in the midst of explosive global expansion but lacked a unified creative vision and scalable systems. They needed someone to build their first-ever in-house global creative team and develop packaging architecture that could flex across olfactive categories while maintaining elevated luxury — without inflating costs.</p></div>
+        <div class="case-block"><h4>The Impact</h4><p>We designed and launched the Soleil collection spanning cosmetics and fragrance. The packaging system we created nearly a decade ago is still in use today — a testament to its strategic rigor and design excellence. Soleil became a cornerstone franchise, and the creative infrastructure set the standard for how Tom Ford Beauty shows up globally.</p></div>
+      </div>
+      <div class="case-scope"><div class="scope-h">Scope of Work</div><div class="scope-tags"><span class="scope-tag">Team Leadership</span><span class="scope-tag">Packaging Architecture</span><span class="scope-tag">Franchise Development</span><span class="scope-tag">Experiential Design</span><span class="scope-tag">Visual Merchandising</span><span class="scope-tag">Print Production</span><span class="scope-tag">Global Press Kits</span></div></div>
+    </div>
+  </div>
+
+  <div class="case-card rv" onclick="this.classList.toggle('open')">
+    <div class="case-header">
+      <div><div class="case-brand">Rodan + Fields</div><div class="case-subtitle">Brand Refresh, Global Scale & Creative Infrastructure</div></div>
+      <div class="case-toggle">+</div>
+    </div>
+    <div class="case-body">
+      <div class="case-content">
+        <div class="case-block"><h4>The Challenge</h4><p>In 2016, Rodan + Fields was approaching $750M in revenue and preparing for international expansion into Japan and Australia. Product efficacy was strong but the brand lacked unified creative vision and scalable systems. Creative execution remained siloed, and packaging architecture was not optimized for regulatory complexity or cross-market scale.</p></div>
+        <div class="case-block"><h4>The Impact</h4><p>During this two-year engagement, revenue grew from approximately $750M to $1.5B. We built the company's first Creative Center of Excellence, established centralized governance, re-engineered packaging architecture for international compliance, and positioned the brand for sustained international growth and long-term enterprise value expansion.</p></div>
+      </div>
+      <div class="case-scope"><div class="scope-h">Scope of Work</div><div class="scope-tags"><span class="scope-tag">Brand Strategy</span><span class="scope-tag">Global Visual System</span><span class="scope-tag">Packaging Architecture</span><span class="scope-tag">Creative Governance</span><span class="scope-tag">Center of Excellence</span><span class="scope-tag">Experiential Strategy</span><span class="scope-tag">International Adaptation</span></div></div>
+    </div>
+  </div>
+
+  <div class="case-card rv" onclick="this.classList.toggle('open')">
+    <div class="case-header">
+      <div><div class="case-brand">ZO Skin Health</div><div class="case-subtitle">Clinical Authority Meets Consumer Connection</div></div>
+      <div class="case-toggle">+</div>
+    </div>
+    <div class="case-body">
+      <div class="case-content">
+        <div class="case-block"><h4>The Challenge</h4><p>ZO Skin Health had built a strong B2B2C foundation through dermatologist and medical spa partnerships, but their direct-to-consumer experience wasn't reflecting the innovation and authority the brand commanded in professional channels. They needed to elevate the DTC brand strategy with cohesive, compelling content.</p></div>
+        <div class="case-block"><h4>The Impact</h4><p>The work transformed ZO's direct-to-consumer presence, creating a brand experience that matched the sophistication of their formulations. Three major 360° product launch campaigns in 2025 established a new standard for how the brand shows up in market, with content that elevated consumer perception while staying true to science-backed authority.</p></div>
+      </div>
+      <div class="case-scope"><div class="scope-h">Scope of Work</div><div class="scope-tags"><span class="scope-tag">Brand Strategy</span><span class="scope-tag">Creative Direction</span><span class="scope-tag">Campaign Development</span><span class="scope-tag">360° Execution</span><span class="scope-tag">DTC Experience</span><span class="scope-tag">Evergreen Content</span></div></div>
+    </div>
+  </div>
+
+  <div class="case-card rv" onclick="this.classList.toggle('open')">
+    <div class="case-header">
+      <div><div class="case-brand">Viktor & Rolf</div><div class="case-subtitle">The Art of Exclusivity</div></div>
+      <div class="case-toggle">+</div>
+    </div>
+    <div class="case-body">
+      <div class="case-content">
+        <div class="case-block"><h4>The Challenge</h4><p>Viktor & Rolf was entering the US market with an avant-garde vision that made traditional retailers nervous. Flowerbomb — a hand grenade-shaped fragrance bottle launching a few years after 9/11 — was considered too risky by major players like Saks. Success required a distribution strategy built on exclusivity, scarcity, and visual reinvention.</p></div>
+        <div class="case-block"><h4>The Impact</h4><p>We orchestrated retailer-specific gift set packaging year after year that fueled the illusion of explosive growth through limited distribution. One of our packaging designs won a Luxe Pack Award. What Saks thought was insane became iconic — the slow-build, high-exclusivity model established Viktor & Rolf as a brand that refused to play it safe.</p></div>
+      </div>
+      <div class="case-scope"><div class="scope-h">Scope of Work</div><div class="scope-tags"><span class="scope-tag">Visual Strategy</span><span class="scope-tag">Industrial Design</span><span class="scope-tag">Experiential Design</span><span class="scope-tag">Store Design</span><span class="scope-tag">Limited-Edition Packaging</span><span class="scope-tag">VM Guidelines</span><span class="scope-tag">Luxe Pack Award</span></div></div>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top:3.5rem;" class="rv">
+    <a href="https://drive.google.com/file/d/1q0rN2L6QfK2_0wtrW7rNaJye15DxMRRq/view?usp=share_link" target="_blank" class="btn" style="border:1px solid rgba(168,184,154,.3);color:var(--sage);">View Full Capabilities Deck &rarr;</a>
+  </div>
+</section>
+
+<section class="approach-section" id="approach">
+  <p class="sec-label rv">Creative Approach</p>
+  <h2 class="sec-heading rv">Never templated. <em>Always bespoke.</em></h2>
+  <div class="sec-line rv"></div>
+  <div class="approach-grid rv">
+    <div class="approach-step"><div class="step-num">01</div><div class="step-title">Gather</div><div class="step-desc">We collect insight across culture, competition, and operations — identifying what must evolve and what must endure.</div></div>
+    <div class="approach-step"><div class="step-num">02</div><div class="step-title">Establish</div><div class="step-desc">We define the strategic foundation: positioning, architecture, and guardrails — the system that holds as you scale.</div></div>
+    <div class="approach-step"><div class="step-num">03</div><div class="step-title">Lead</div><div class="step-desc">We activate across identity, experience, and execution — driving consistency, momentum, and measurable growth.</div></div>
+  </div>
+  <p class="approach-motto rv">Designed to stick. &nbsp;|&nbsp; Structured to scale. &nbsp;|&nbsp; Built to endure.</p>
+</section>
+
+<section>
+  <p class="sec-label rv">Current & Advisory</p>
+  <h2 class="sec-heading rv">Where I'm <em>building now.</em></h2>
+  <div class="sec-line rv"></div>
+  <div class="advisory-grid">
+    <div class="advisory-card rv"><div class="advisory-role">Creative Collective</div><div class="advisory-name">Gellyatin / 360</div><div class="advisory-desc">Fractional creative leadership and 360° brand building for growth-stage beauty brands. Bespoke strategy shaped by ambition, market, and long-term vision.</div></div>
+    <div class="advisory-card rv"><div class="advisory-role">Fractional Creative</div><div class="advisory-name">ZO Skin Health</div><div class="advisory-desc">Leading creative marketing for a medical-grade skincare company, bridging clinical authority with compelling direct-to-consumer brand experiences.</div></div>
+    <div class="advisory-card rv"><div class="advisory-role">Co-founder</div><div class="advisory-name">Bakeup Beauty</div><div class="advisory-desc">Launched a disruptive indie beauty brand with Grade A Design — from concept through go-to-market execution.</div></div>
+    <div class="advisory-card rv"><div class="advisory-role">Founder</div><div class="advisory-name">DetoxPlanet.org</div><div class="advisory-desc">A non-profit committed to detoxing the planet from plastics and finding innovative recycling solutions — turning waste into possibility.</div></div>
+  </div>
+</section>
+
+<section class="contact-section" id="contact">
+  <p class="sec-label rv">Let's Connect</p>
+  <h2 class="sec-heading rv">Ready to build something <em>meaningful?</em></h2>
+  <div class="sec-line rv"></div>
+  <a class="contact-email rv" href="mailto:adelpriore377@gmail.com">adelpriore377@gmail.com</a>
+  <div class="contact-phone rv">917 620 2821</div>
+  <div class="rv"><a href="https://drive.google.com/file/d/1q0rN2L6QfK2_0wtrW7rNaJye15DxMRRq/view?usp=share_link" target="_blank" class="btn" style="border:1px solid rgba(168,184,154,.3);color:var(--sage);">View Full Portfolio</a></div>
+  <span class="contact-url rv">AngelicaDelPriore.com</span>
+</section>
+
+<footer>
+  <span class="foot-left">Angelica Del Priore &middot; Gellyatin / 360</span>
+  <span class="foot-right">&copy; 2026 All Rights Reserved</span>
+</footer>
+</div>
+
+<script>
+function unlock(){
+  if(document.getElementById('pw').value==='ADP2026'){
+    document.getElementById('lock').classList.add('out');
+    document.getElementById('site').classList.add('on');
+    initReveal();
+  } else {
+    const e=document.getElementById('lock-err');
+    e.textContent='Incorrect — please try again';
+    e.style.animation='none';
+    requestAnimationFrame(()=>e.style.animation='shake .3s ease');
+  }
+}
+document.getElementById('pw').addEventListener('keydown',e=>{if(e.key==='Enter')unlock()});
+function closeNav(){document.getElementById('navLinks').classList.remove('mob-open')}
+window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40)});
+function initReveal(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach((en,i)=>{if(en.isIntersecting){setTimeout(()=>en.target.classList.add('in'),i*60);obs.unobserve(en.target);}});
+  },{threshold:.1});
+  document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+}
+</script>
+</body>
+</html>
